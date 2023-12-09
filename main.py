@@ -102,9 +102,44 @@ class CommandLoop:
             else:
                 self.main_app.process_command(command)
 
-class Main:
+class QueryHandler:
+    def query_task(self, task, database):
+        query_object = QueryTask(task)
+        result = query_object.execute(database)
+
+        if result:
+            print("Matching records for task {}: ".format(task))
+            for record in result:
+                print(record)
+        else:
+            print("No records found for the given task.")
+
+    def query_tag(self, tag, database):
+        query_object = QueryTag(tag)
+        result = query_object.execute(database)
+
+        if result:
+            print("Matching records for tag {}: ".format(tag))
+            for record in result:
+                print(record)
+        else:
+            print("No records found for the given tag.")
+
+    def query_date(self, date, database):
+        query_object = QueryDate(date)
+        result = query_object.execute(database)
+
+        if result:
+            print("Matching records for date {}: ".format(date))
+            for record in result:
+                print(record)
+        else:
+            print("No records found for the given date.")
+
+class MainApp:
     def __init__(self):
         self.db = Database()
+        self.query_handler = QueryHandler()
 
     def process_command(self, command):
         parts = command.split()
@@ -113,11 +148,11 @@ class Main:
         if operation == 'record':
             self.record(parts[1:])
         elif operation == 'querytask':
-            self.query_task(parts[1])
+            self.query_handler.query_task(parts[1], self.db)
         elif operation == 'querytag':
-            self.query_tag(parts[1])
+            self.query_handler.query_tag(parts[1], self.db)
         elif operation == 'querydate':
-            self.query_date(parts[1])
+            self.query_handler.query_date(parts[1], self.db)
         else:
             print("Invalid command. Supported commands: record, querytask, querytag, querydate")
 
@@ -130,43 +165,10 @@ class Main:
         self.db.record_data(record_object.date, record_object.from_time, record_object.to_time, record_object.task, record_object.tag)
         print("Record added successfully.")
 
-    def query_task(self, task):
-        query_object = QueryTask(task)
-        result = query_object.execute(self.db)
-
-        if result:
-            print("Matching records for task {}: ".format(task))
-            for record in result:
-                print(record)
-        else:
-            print("No records found for the given task.")
-
-    def query_tag(self, tag):
-        query_object = QueryTag(tag)
-        result = query_object.execute(self.db)
-
-        if result:
-            print("Matching records for tag {}: ".format(tag))
-            for record in result:
-                print(record)
-        else:
-            print("No records found for the given tag.")
-
-    def query_date(self, date):
-        query_object = QueryDate(date)
-        result = query_object.execute(self.db)
-
-        if result:
-            print("Matching records for date {}: ".format(date))
-            for record in result:
-                print(record)
-        else:
-            print("No records found for the given date.")
-
     def close(self):
         self.db.close_connection()
 
 if __name__ == "__main__":
-    main_app = Main()
+    main_app = MainApp()
     command_loop = CommandLoop(main_app)
     command_loop.start()
