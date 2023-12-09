@@ -1,0 +1,11 @@
+Initial User Requirements
+
+Epic
+As a user, I would like to use the command line to manage and track my time.
+
+Stories
+As a user, I need to record my time using a specific command format. (Command Date FROM TO TASK TAG)
+
+As a user, I need to be able to use different formats/shorthand to record my time.
+
+As a user I need to be able to query my data using DATE/TASK/TAG.
