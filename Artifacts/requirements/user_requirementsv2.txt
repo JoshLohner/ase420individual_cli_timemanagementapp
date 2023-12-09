@@ -10,3 +10,8 @@ As a user, I need to be able to use different formats/shorthand to record my tim
 
 As a user I need to be able to query my data using DATE/TASK/TAG.
 
+As a user, I would like to be able to create a report of my time from a range of dates.
+
+As a user, I would like to be able to see a list of activities that I have spent the most time on.
+
+As a developer, I should auto calculate a time used variable from the input from - to.
