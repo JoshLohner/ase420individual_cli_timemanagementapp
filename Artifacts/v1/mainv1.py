@@ -14,7 +14,6 @@ class Database:
                 date TEXT,
                 from_time TEXT,
                 to_time TEXT,
-                duration TEXT,  -- Added a new column for duration
                 task TEXT,
                 tag TEXT
             )
@@ -22,18 +21,11 @@ class Database:
         self.connection.commit()
 
     def record_data(self, date, from_time, to_time, task, tag):
-        duration = self.calculate_duration(from_time, to_time)
         self.cursor.execute('''
-            INSERT INTO records (date, from_time, to_time, duration, task, tag)
-            VALUES (?, ?, ?, ?, ?, ?)
-        ''', (date, from_time, to_time, duration, task, tag))
+            INSERT INTO records (date, from_time, to_time, task, tag)
+            VALUES (?, ?, ?, ?, ?)
+        ''', (date, from_time, to_time, task, tag))
         self.connection.commit()
-
-    def calculate_duration(self, from_time, to_time):
-        from_datetime = datetime.strptime(from_time, '%H:%M')
-        to_datetime = datetime.strptime(to_time, '%H:%M')
-        duration = to_datetime - from_datetime
-        return str(duration)
 
     def query_data(self, query_object):
         return query_object.execute(self)
@@ -44,9 +36,8 @@ class Database:
 class Record:
     def __init__(self, date, from_time, to_time, task, tag):
         self.date = self.convert_date(date)
-        self.from_time = self.validate_time_format(from_time)
-        self.to_time = self.validate_time_format(to_time)
-        self.duration = self.calculate_duration(from_time, to_time)
+        self.from_time = from_time
+        self.to_time = to_time
         self.task = task
         self.tag = tag
 
@@ -59,18 +50,6 @@ class Record:
         else:
             return date
 
-    def calculate_duration(self, from_time, to_time):
-        from_datetime = datetime.strptime(from_time, '%H:%M')
-        to_datetime = datetime.strptime(to_time, '%H:%M')
-        duration = to_datetime - from_datetime
-        return str(duration)
-
-    def validate_time_format(self, time_str):
-        try:
-            datetime.strptime(time_str, '%H:%M')
-            return time_str
-        except ValueError:
-            raise ValueError("Invalid time format. Use HH:MM")
 class QueryTask:
     def __init__(self, task):
         self.task = task
@@ -108,26 +87,6 @@ class QueryDate:
         database.cursor.execute('''
             SELECT * FROM records WHERE date = ?
         ''', (self.date,))
-        return database.cursor.fetchall()
-
-class QueryDateRange:
-    def __init__(self, start_date, end_date):
-        self.start_date = self.convert_date(start_date)
-        self.end_date = self.convert_date(end_date)
-
-    def convert_date(self, date):
-        if date.lower() == 'today':
-            return datetime.now().strftime('%Y/%m/%d')
-        elif date.lower() == 'yesterday':
-            yesterday = datetime.now() - timedelta(days=1)
-            return yesterday.strftime('%Y/%m/%d')
-        else:
-            return date
-
-    def execute(self, database):
-        database.cursor.execute('''
-            SELECT * FROM records WHERE date BETWEEN ? AND ?
-        ''', (self.start_date, self.end_date))
         return database.cursor.fetchall()
 
 class CommandLoop:
@@ -177,17 +136,6 @@ class QueryHandler:
         else:
             print("No records found for the given date.")
 
-    def query_date_range(self, start_date, end_date, database):
-        query_object = QueryDateRange(start_date, end_date)
-        result = query_object.execute(database)
-
-        if result:
-            print("Matching records for date range {} to {}: ".format(start_date, end_date))
-            for record in result:
-                print(record)
-        else:
-            print("No records found for the given date range.")
-
 class MainApp:
     def __init__(self):
         self.db = Database()
@@ -205,10 +153,8 @@ class MainApp:
             self.query_handler.query_tag(parts[1], self.db)
         elif operation == 'querydate':
             self.query_handler.query_date(parts[1], self.db)
-        elif operation == 'report':
-            self.query_handler.query_date_range(parts[1], parts[2], self.db)
         else:
-            print("Invalid command. Supported commands: record, querytask, querytag, querydate, report")
+            print("Invalid command. Supported commands: record, querytask, querytag, querydate")
 
     def record(self, data):
         if len(data) != 5:
