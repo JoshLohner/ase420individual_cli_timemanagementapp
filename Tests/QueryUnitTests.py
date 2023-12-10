@@ -11,7 +11,6 @@ class TestQueryPriority(unittest.TestCase):
         self.db.close_connection()
 
     def test_execute(self):
-        # Test if priority query execution works as expected
         self.db.record_data('2023/01/01', '10:00', '12:00', 'Task 1', 'Tag 1')
         self.db.record_data('2023/01/01', '13:00', '15:00', 'Task 2', 'Tag 2')
 
@@ -21,7 +20,6 @@ class TestQueryPriority(unittest.TestCase):
 
 
 class TestQueryTask(unittest.TestCase):
-
     def setUp(self):
         self.db = Database(':memory:')
         self.query_task = QueryTask('Task 1')
@@ -30,7 +28,6 @@ class TestQueryTask(unittest.TestCase):
         self.db.close_connection()
 
     def test_execute(self):
-        # Test if task query execution works as expected
         self.db.record_data('2023/01/01', '10:00', '12:00', 'Task 1', 'Tag 1')
         self.db.record_data('2023/01/01', '13:00', '15:00', 'Task 2', 'Tag 2')
 
@@ -48,7 +45,6 @@ class TestQueryTag(unittest.TestCase):
         self.db.close_connection()
 
     def test_execute(self):
-        # Test if tag query execution works as expected
         self.db.record_data('2023/01/01', '10:00', '12:00', 'Task 1', 'Tag 1')
         self.db.record_data('2023/01/01', '13:00', '15:00', 'Task 2', 'Tag 2')
 
@@ -66,7 +62,6 @@ class TestQueryDate(unittest.TestCase):
         self.db.close_connection()
 
     def test_execute(self):
-        # Test if date query execution works as expected
         self.db.record_data('2023/01/01', '10:00', '12:00', 'Task 1', 'Tag 1')
         self.db.record_data('2023/01/01', '13:00', '15:00', 'Task 2', 'Tag 2')
 
@@ -85,7 +80,6 @@ class TestQueryDateRange(unittest.TestCase):
         self.db.close_connection()
 
     def test_execute(self):
-        # Test if date range query execution works as expected
         self.db.record_data('2023/01/01', '10:00', '12:00', 'Task 1', 'Tag 1')
         self.db.record_data('2023/01/02', '13:00', '15:00', 'Task 2', 'Tag 2')
 

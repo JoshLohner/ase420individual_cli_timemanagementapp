@@ -6,7 +6,6 @@ from main import Record
 class TestRecord(unittest.TestCase):
 
     def test_convert_date(self):
-        # Test if date conversion works as expected
         today_date = datetime.now().strftime('%Y/%m/%d')
         yesterday_date = (datetime.now() - timedelta(days=1)).strftime('%Y/%m/%d')
 
@@ -19,12 +18,10 @@ class TestRecord(unittest.TestCase):
         self.assertEqual(record_custom_date.date, '2023/01/01')
 
     def test_calculate_duration(self):
-        # Test if duration calculation works as expected
         record = Record('2023/01/01', '10:00', '12:30', 'Task 1', 'Tag 1')
         self.assertEqual(record.duration, '2:30:00')
 
     def test_validate_time_format(self):
-        # Test if time format validation works as expected
         valid_time_str = '12:00'
         invalid_time_str = 'invalid_time'
 
