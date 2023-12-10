@@ -1,0 +1,37 @@
+10 Code smells-
+1. Global Variable/Object - Prototype (database)
+2. Code Duplication - Prototype (connecting to database, creating cursor duplicated in initialize database and record_data)
+3. Repetitive Code - Prototype (menu printing and user input handling are repeated
+4. Magic Numbers - Prototype (choices, 1,2,3,4)
+5. Magic Strings - V1 (today, yesterday)
+6. Code Duplication - V1 (convert_date is duplicated in querydate and record)
+7. Unused Method - V1 (unused method in database class)
+8. Global data - V1 (The cursor is global and could cause issues)
+9. Redundant Comments - Main (redundant comments that are not useful in the database class)
+10. Lack of error handling - Main (validate time format)
+
+5 Refactorings Used to Remove Code smells-
+1. Localizing the database and passing it through methods properly
+2. Pass input as function parameters
+3. Replace magic numbers
+4. Define constants for the magic strings
+5. Remove redundant comments
+
+Software Rules-
+1. Keep it simple stupid
+2. No surprises
+3. Plan ahead
+4. Use tools to solve problems
+
+Design Patterns-
+Singleton Pattern:
+Database class is a singleton because only one instance of database connection is involved.
+
+Factory Pattern:
+QueryHandler acts like a  factory for the different query classes that are created, including QueryPriority, QueryTask, QueryTag and so on.
+
+Oberserver Pattern:
+Command loop class continuously listens for user input.
+
+Facade Pattern:
+Mainapp class is a facade for the rest of the database operations and queries.
